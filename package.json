@@ -11,6 +11,7 @@
     "dev": "concurrently \"npm run server\" \"npm run serve\""
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^1.7.11",
     "axios": "^0.27.2",
     "concurrently": "^7.3.0",
     "core-js": "^3.8.3",

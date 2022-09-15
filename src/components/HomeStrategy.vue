@@ -10,7 +10,7 @@
           <span>{{ item.title }}</span>
           <b>】</b>
         </h3>
-        <span>@拉吉莫拉拉</span>
+        <span>@{{ item.author || '拉吉莫拉拉'}}</span>
         <b class="line"></b>
       </div>
       <div class="abstract">

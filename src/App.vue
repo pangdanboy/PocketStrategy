@@ -45,7 +45,8 @@
         </li>
         <!--根据当前用户是否登录决定是否创建用户默认头像-->
         <li class="avatar" v-if="this.$store.state.currentUser">
-          <img src="./assets/images/userAvatar.jpg">
+          <!--第一次登录取vuex中的头像地址，后面刷新网页之后会重新获取地址，这时取这个地址-->
+          <img :src="this.$store.state.user_avatar">
           <b></b>
           <div class="user-info">
             <router-link to="/user" tag="span">个人中心</router-link>
@@ -120,7 +121,7 @@ export default {
     Footer
   },
   mounted () {
-    console.log(this.$route)
+    // console.log(this.$route)
     // 如果当前用户已经登录，刷新页面时更新用户状态
     if (localStorage.userToken) {
       this.$store.commit('changeCurrentUser', true)
@@ -132,6 +133,8 @@ export default {
       // 刷新页面时更新用户信息
       this.$axios.get('users/current').then(res => {
         console.log(res.data)
+        // 设置用户头像
+        this.$store.state.user_avatar = res.data.avatar
         if (res.data.admin) {
           // 修改当前用户权限
           this.$store.commit('changeAdmin', true)
@@ -157,8 +160,8 @@ export default {
       // 实时改变网页滚动距离和方向
       this.$store.commit('changeScrollTop', -Math.round(this.scroll.y))
       this.$store.commit('changeScrollDirection', this.scroll.directionY)
-      console.log(this.$store.state.currentScrollTop)
-      console.log(-Math.round(this.scroll.y))
+      // console.log(this.$store.state.currentScrollTop)
+      // console.log(-Math.round(this.scroll.y))
       if (this.scroll.directionY === 1) {
         this.hiddenHeader()
       } else {
@@ -169,7 +172,7 @@ export default {
         this.startHeader()
       }
     })
-    console.log(this.$route)
+    // console.log(this.$route)
   },
   provide () {
     return {
@@ -177,19 +180,19 @@ export default {
   },
   methods: {
     showHeader () {
-      console.log('显示头部')
+      // console.log('显示头部')
       this.headerClass = 'show'
     },
     hiddenHeader () {
-      console.log('隐藏头部')
+      // console.log('隐藏头部')
       this.headerClass = 'hidden'
     },
     startHeader () {
-      console.log('头部初始状态')
+      // console.log('头部初始状态')
       this.headerClass = 'start'
     },
     pageDown () {
-      console.log('点击页面滚动')
+      // console.log('点击页面滚动')
       this.scroll.scrollTo(0, -window.innerHeight, 1000)
     },
     pageTop () {

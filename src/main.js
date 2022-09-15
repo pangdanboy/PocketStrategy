@@ -6,12 +6,31 @@ import store from './store/index'
 import resetStyle from './assets/css/reset.css'
 import iconStyle from './assets/font/iconfont.css'
 import { Message, Upload, FormItem } from 'element-ui'
+// markdown相关
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import '@kangc/v-md-editor/lib/style/preview.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+// highlightjs
+import hljs from 'highlight.js'
+VMdEditor.use(githubTheme, {
+  Hljs: hljs
+})
+VMdPreview.use(githubTheme, {
+  Hljs: hljs
+})
+Vue.use(VMdEditor)
+Vue.use(VMdPreview)
+
 Vue.use(resetStyle)
 Vue.use(iconStyle)
 Vue.use(Upload)
 Vue.use(FormItem)
 Vue.prototype.$message = Message
 Vue.component(Message.name, Message)
+
 // 配置全局axios请求地址
 axios.defaults.baseURL = 'http://localhost:5000/api/'
 // 全局配置axios
@@ -52,7 +71,7 @@ new Vue({
   store,
   render: h => h(App),
   mounted () {
-    console.log(this.$route)
+    // console.log(this.$route)
   },
   methods: {
   }

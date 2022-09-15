@@ -7,6 +7,8 @@ export default new Vuex.Store({
   state: {
     // 用户是否登录
     currentUser: false,
+    // 用户头像
+    user_avatar: '',
     // 是否是管理员
     admin: false,
     currentScrollTop: 0,

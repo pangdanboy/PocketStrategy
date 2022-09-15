@@ -9,6 +9,15 @@ const ArticleSchema = new Schema({
     type: String,
     required: true
   },
+  // 文章作者id
+  user_id: {
+    type: String,
+    required: true
+  },
+  // 文章作者
+  author: {
+    type: String
+  },
   // 文章标题
   title: {
     type: String,

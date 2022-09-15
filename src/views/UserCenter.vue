@@ -83,6 +83,7 @@ export default {
     },
     save () {
       this.infoEdit = false
+      // 保存修改之后的用户信息，修改的信息包括用户的昵称、用户的简介信息、用户的个人网站
       this.$axios.put('users/edit', {
         name: this.name,
         user_info: this.user_info,

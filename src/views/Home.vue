@@ -18,8 +18,8 @@
               <router-link :to="`/Strategy/?articleID=${item.articleID}`" v-for="(item, index) in homeAtlas" :key="item.articleID" tag="div">
                 <HomeStrategy :index="index" :item="item" @refreshScroll="refreshScroll"></HomeStrategy>
               </router-link>
-              <!--加载更多文章按钮-->
-              <div class="checkMore">
+              <!--加载更多文章按钮，文章没有加载完成时显示-->
+              <div class="checkMore" v-show="articleNumber !== articleCount">
                 <button @click.prevent="checkMore">查看更多攻略>></button>
               </div>
             </div>
@@ -45,8 +45,12 @@ export default {
   data: function () {
     return {
       mySelfTop: 0,
+      // 攻略文章数据
       homeAtlas: {},
-      articleNumber: ''
+      // 需要获取的文章数量(默认为首屏数量)
+      articleNumber: 6,
+      // 文章总数量
+      articleCount: 0
     }
   },
   components: {
@@ -72,9 +76,17 @@ export default {
       this.$store.commit('changeCurrentUser', false)
     }
     // 获取主页攻略文章数据(开始只展示六条，以后每次都获取六条)
-    this.$axios.get('articles/getArticle').then(res => {
+    this.$axios.get('articles/getArticle?articleNumber=' + this.articleNumber).then(res => {
       console.log(res.data)
       this.homeAtlas = res.data
+    }).catch(err => {
+      console.log(err)
+    })
+    // 获取文章总数量，用于文章加载完之后提示用户
+    this.$axios.get('/articles/getCount').then(res => {
+      console.log(res.data)
+      // 保存文章总数
+      this.articleCount = res.data.articleCount
     }).catch(err => {
       console.log(err)
     })
@@ -87,6 +99,21 @@ export default {
     },
     // 查看更多文章方法
     checkMore () {
+      this.articleNumber += 6
+      if (this.articleNumber > this.articleCount) {
+        // 如果此时要获取的文章数量大于文章总数，那么获取全部文章
+        this.articleNumber = this.articleCount
+        this.$message({
+          message: '所有攻略已加载完毕!',
+          type: 'warning'
+        })
+      }
+      this.$axios.get('articles/getArticle?articleNumber=' + this.articleNumber).then(res => {
+        console.log(res.data)
+        this.homeAtlas = res.data
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   watch: {
@@ -95,8 +122,8 @@ export default {
       // 如果滚动距离大于banner加上内容头部的高度，这时开始改变个人面板的top值
       if (this.$store.state.currentScrollTop >= window.innerHeight + 65) {
         // 如果是向下滚动，且个人面板已经到底，就固定个人面板(通过不断改变个人面板的top值实现)
-        if (this.$store.state.scrollDirection === 1 && this.mySelfTop >= 1000) {
-          this.mySelfTop = 1000
+        if (this.$store.state.scrollDirection === 1 && this.mySelfTop >= (this.articleNumber - 2) * 250) {
+          this.mySelfTop = (this.articleNumber - 2) * 250
         } else { // 如果是向上滚动，且个人面板已经脱离底部，就设置个人面板不随网页滚动(通过不断改变个人面板的top值实现)
           this.mySelfTop = this.$store.state.currentScrollTop - window.innerHeight
         }

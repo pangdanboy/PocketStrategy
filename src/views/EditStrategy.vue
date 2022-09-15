@@ -11,7 +11,9 @@
       </div>
       <div class="content">
         <span>内容:</span>
-        <textarea name="" id="" cols="30" rows="10" v-model="content"></textarea>
+<!--        <textarea name="" id="" cols="30" rows="10" v-model="content"></textarea>-->
+        <button @click.prevent="markdown">进入编辑</button>
+        <span>点击保存后自动返回</span>
       </div>
       <div class="cover-submit">
         <div class="cover">
@@ -36,6 +38,7 @@
         </div>
       </div>
     </div>
+    <v-md-editor v-show="mdShow" v-model="text" height="90%" right-toolbar="preview toc sync-scroll" @save="save"></v-md-editor>
   </div>
 </template>
 
@@ -47,12 +50,15 @@ export default {
     return {
       title: '',
       abstract: '大致描述一下你将要书写的攻略内容',
-      content: '',
       // 设置请求头
       headers: { enctype: 'multipart/form-data' },
       // 上传成功之后返回的图片路径
       imageUrl: '',
-      reqUrl: 'http://localhost:5000/api/uploadImg/imgUpload'
+      reqUrl: 'http://localhost:5000/api/uploadImg/imgUpload',
+      // markdown内容
+      text: '',
+      mdShow: false,
+      autofocus: true
     }
   },
   mounted () {
@@ -93,6 +99,24 @@ export default {
       }
       return isJPG && isLt3M
     },
+    // 打开markdown编辑器
+    markdown () {
+      this.mdShow = true
+    },
+    save () {
+      if (this.text.length === 0) {
+        this.$message({
+          message: '请输入内容',
+          type: 'warning'
+        })
+      } else {
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+        this.mdShow = false
+      }
+    },
     // 发布攻略
     release () {
       if (this.title.length === 0) {
@@ -105,7 +129,7 @@ export default {
           message: '摘要不能为空',
           type: 'warning'
         })
-      } else if (this.content.length === 0) {
+      } else if (this.text.length === 0) {
         this.$message({
           message: '内容不能为空',
           type: 'warning'
@@ -114,14 +138,14 @@ export default {
         this.$axios.post('articles/article', {
           title: this.title,
           abstract: this.abstract,
-          content: this.content,
+          content: this.text,
           cover: this.imageUrl || ''
         }).then(res => {
           console.log(res.data)
           // 清空内容或者设置默认值
           this.title = ''
           this.abstract = '大致描述一下你将要书写的攻略内容'
-          this.content = ''
+          this.text = ''
           this.imageUrl = ''
           this.$message({
             message: '发布成功',
@@ -182,7 +206,7 @@ export default {
         }
       }
       .abstract{
-        height: 80px;
+        height: 180px;
         span{
           font-size: 22px;
           font-weight: bolder;
@@ -201,21 +225,26 @@ export default {
         }
       }
       .content{
-        height: 250px;
+        height: 150px;
         span{
           font-size: 22px;
           font-weight: bolder;
           margin-left: 20px;
           margin-right: 20px;
+          &:last-child{
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 16px;
+            font-weight: normal;
+          }
         }
-        textarea{
-          outline: none;
-          resize: none;
-          width: 88%;
+        button{
+          width: 200px;
+          height: 50px;
           border: none;
-          padding: 10px;
-          box-sizing: border-box;
-          color: #000000;
+          cursor: pointer;
+          border-radius: 5px;
+          font-size: 22px;
+          margin-right: 5px;
         }
       }
       .cover-submit{
@@ -264,6 +293,11 @@ export default {
         }
       }
     }
+    .v-md-editor{
+      position: absolute;
+      width: 90%;
+      margin-top: 30px;
+    }
     @media screen and (min-width: 1450px){
       .edit-atlas{
         height: 700px;
@@ -275,10 +309,10 @@ export default {
           height: 70px;
         }
         .abstract{
-          height: 90px;
+          height: 180px;
         }
         .content{
-          height: 300px;
+          height: 200px;
         }
         .cover{
           height: 140px;
@@ -322,11 +356,6 @@ export default {
           }
         }
         .abstract{
-          textarea{
-            width: 80%;
-          }
-        }
-        .content{
           textarea{
             width: 80%;
           }

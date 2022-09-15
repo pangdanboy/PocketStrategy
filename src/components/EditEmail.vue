@@ -47,6 +47,7 @@ export default {
       // 调用父组件方法隐藏修改邮件框
       this.$emit('hiddenEditEmail')
     },
+    // 用户输入邮箱格式验证方法
     checkEmail () {
       console.log('email失去焦点')
       const emailExp = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
@@ -60,6 +61,7 @@ export default {
         this.emailClass = ''
       }
     },
+    // 验证码格式验证
     checkVerifyCode () {
       console.log('verifyCode失去焦点')
       if (this.verifyCode.length === 0) {
@@ -70,6 +72,7 @@ export default {
         this.codeClass = ''
       }
     },
+    // 在用户输入邮箱格式正确之后获取邮箱验证码
     getCode () {
       if (this.email.length !== 0 && !this.emailErrorShow) {
         this.$axios.get('verifyCode/verify?email=' + this.email).then(res => {
@@ -80,15 +83,19 @@ export default {
             })
           } else {
             console.log(res.data)
+            // 保存后端返回的邮箱的验证码
             this.code = res.data.verifyCode
+            // 提示用户验证码发送成功
             this.$message({
               message: '发送成功',
               type: 'success'
             })
+            // 开启验证码时效定时器，验证码时效时间为60秒，验证码失效之后清除保存的验证码
             this.codeTimer = setTimeout(() => {
               this.code = ''
               console.log('验证码失效')
             }, 60000)
+            // 验证码时效时间提示定时器，验证码失效之后重置验证码时效并提示用户重新获取
             this.timer = setInterval(() => {
               this.$refs.codeBtn.innerText = this.codeTime + '秒'
               this.codeTime--
@@ -105,6 +112,7 @@ export default {
         })
       }
     },
+    // 修改邮箱方法
     editEmail () {
       if (this.verifyCode !== this.code + '') {
         this.codeError = true
@@ -125,7 +133,8 @@ export default {
             })
             // 隐藏弹出框
             this.hidden()
-            router.push('/Refresh')
+            // 刷新当前页面，通过跳转到一个空白页面然后立马跳转回当前页面实现当前页面的数据刷新(也就是重新获取修改之后的用户信息)
+            router.push('/RefreshUser')
           }
           // 两种情况需要清除定时器，重置验证码时效，清空验证码
           clearInterval(this.timer)

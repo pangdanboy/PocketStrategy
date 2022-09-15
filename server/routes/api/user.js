@@ -43,8 +43,9 @@ router.post('/register', (req, res) => {
             name: username,
             email: req.body.email,
             password: req.body.password,
-            avatar: '',
-            // admin: true,
+            // 注册时返回默认头像地址(相对于服务器地址)
+            avatar: 'http://localhost:5000/public/userAvatar/userAvatar.jpg',
+            admin: true,
             user_info: '',
             user_web: ''
           })
@@ -92,6 +93,7 @@ router.post('/login', (req, res) => {
           res.json({
             code: 200,
             success: true,
+            user_avatar: user.avatar,
             admin: user.admin || false,
             token: 'Bearer ' + token
           })
@@ -133,6 +135,7 @@ router.put('/edit', passport.authenticate('jwt', { session: false }), (req, res)
   user.save()
   return res.json({ code: 200 })
 })
+
 // $route put api/user/editEmail
 // @desc 返回修改结果 user
 // @access private
@@ -153,4 +156,20 @@ router.put('/editEmail', passport.authenticate('jwt', { session: false }), (req,
   })
 })
 
+// $route get api/user/getUserById
+// @desc 返回根据id查询到的用户信息，该信息只包括用户的昵称与头像(用于文章评论展示与用户留言展示)
+// @access public
+router.get('/getUserById', (req, res) => {
+  // eslint-disable-next-line camelcase
+  const user_id = req.query.user_id
+  User.findOne({ _id: user_id }).then(user => {
+    console.log(user)
+    res.json({
+      user_name: user.name,
+      user_avatar: user.avatar
+    })
+  }).catch(err => {
+    console.log(err)
+  })
+})
 module.exports = router

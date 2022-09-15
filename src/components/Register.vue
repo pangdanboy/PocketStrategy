@@ -56,6 +56,8 @@ export default {
       errorShow: false,
       // 邮箱格式错误
       emailErrorShow: false,
+      // 邮箱失去焦点验证(解决在没有进行邮箱验证时回车会发送验证码的错误)
+      emailBlur: false,
       // 密码格式错误
       passwordErrorShow: false,
       // 验证码格式错误
@@ -91,6 +93,7 @@ export default {
         this.emailClass = 'error'
       } else {
         this.emailErrorShow = false
+        this.emailBlur = true
         this.emailClass = ''
       }
     },
@@ -115,7 +118,8 @@ export default {
       }
     },
     getCode () {
-      if (this.email.length !== 0 && !this.emailErrorShow) {
+      // 邮箱不为空且经过检测之后格式正确
+      if (this.email.length !== 0 && !this.emailErrorShow && this.emailBlur) {
         this.$axios.get('verifyCode/verify?email=' + this.email).then(res => {
           if (res.data.code === 404) {
             this.$message({

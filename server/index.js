@@ -2,13 +2,12 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+// eslint-disable-next-line no-unused-vars
+const passport = require('passport')
 const app = express()
 
 // 解决跨域问题
 app.use(cors({ origin: 'http://localhost:8080' }))
-
-// eslint-disable-next-line no-unused-vars
-const passport = require('passport')
 
 // 引入users.js
 const users = require('./routes/api/user')
@@ -18,6 +17,10 @@ const verifyCode = require('./routes/api/verifyCode')
 const uploadImg = require('./routes/api/uploadImg')
 // 引入uploadImg.js
 const article = require('./routes/api/article')
+// 引入comment.js
+const comment = require('./routes/api/comment')
+// 引入message.js
+const message = require('./routes/api/message')
 
 // DB config
 const db = require('./config/keys').mongoURI
@@ -38,6 +41,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 // 配置静态托管，将用户上传的静态资源暴露出去
 app.use('/public/articleCover', express.static('./public/articleCover'))
+app.use('/public/userAvatar', express.static('./public/userAvatar'))
 
 // 请求测试
 app.get('/', (req, res) => {
@@ -48,6 +52,8 @@ app.use('/api/users', users)
 app.use('/api/verifyCode', verifyCode)
 app.use('/api/uploadImg', uploadImg)
 app.use('/api/articles', article)
+app.use('/api/comments', comment)
+app.use('/api/messages', message)
 
 // 端口配置
 const port = process.env.PORT || 5000

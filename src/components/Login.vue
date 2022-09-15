@@ -99,6 +99,8 @@ export default {
               message: '登录成功',
               type: 'success'
             })
+            // 保存用户头像地址
+            this.$store.state.user_avatar = res.data.user_avatar
             // 点击取消按钮调用父组件传递方法，隐藏登录框
             this.$emit('hiddenLogin')
             // 修改当前用户登录状态
