@@ -15,7 +15,7 @@
           <div class="content-in-bottom">
             <div class="content-in-left">
               <!--攻略具体内容展示界面-->
-              <router-link :to="`/Strategy/?articleID=${item.articleID}`" v-for="(item, index) in homeAtlas" :key="item.articleID" tag="div">
+              <router-link :to="`/Strategy/?articleID=${item._id}`" v-for="(item, index) in homeAtlas" :key="item.articleID" tag="div">
                 <HomeStrategy :index="index" :item="item" @refreshScroll="refreshScroll"></HomeStrategy>
               </router-link>
               <!--加载更多文章按钮，文章没有加载完成时显示-->
@@ -92,7 +92,7 @@ export default {
     })
   },
   methods: {
-    // 刷新iscroll方法，需要传递给子组件HomeAtlas
+    // 刷新iscroll方法，需要传递给子组件HomeStrategy
     refreshScroll () {
       // 刷新iscroll
       this.$emit('refreshScroll')
@@ -137,22 +137,11 @@ export default {
 
 <style scoped lang="scss">
   #banner{
-  width: 100%;
   height: 100vh;
   background: url('./../assets/images/home.jpg') no-repeat;
   background-size: cover;
   position: relative;
   .title{
-    width: 0px;
-    font-size: 32px;
-    color: rgba(255,255,255,1);
-    position: absolute;
-    text-align: center;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
-    overflow: hidden;
     animation: showText 4s steps(8) 0s forwards;
   }
   @keyframes showText {

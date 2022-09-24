@@ -1,8 +1,5 @@
-// @login && register
 const express = require('express')
 const bcrypt = require('bcrypt')
-// eslint-disable-next-line no-unused-vars
-const gravatar = require('gravatar')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const keys = require('./../../config/keys')
@@ -172,4 +169,8 @@ router.get('/getUserById', (req, res) => {
     console.log(err)
   })
 })
+/**
+ * 用户信息(登录注册，用户信息管理)
+ * @type {Router}
+ */
 module.exports = router

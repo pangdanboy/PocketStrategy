@@ -28,7 +28,7 @@
           <b></b>
           <div>
             <router-link to="/album" tag="span"><i class="iconfont icon-tupianbizhi"></i>壁纸</router-link>
-            <router-link to="/talk" tag="span"><i class="iconfont icon-liuyan"></i>说说</router-link>
+            <router-link to="/news" tag="span"><i class="iconfont icon-liuyan"></i>新闻</router-link>
           </div>
         </li>
         <router-link to="/about" tag="li">
@@ -50,8 +50,10 @@
           <b></b>
           <div class="user-info">
             <router-link to="/user" tag="span">个人中心</router-link>
-            <span @click="logout">退出登录</span>
+            <router-link to="/notice" tag="span">我的通知</router-link>
             <router-link to="/EditStrategy" tag="span" v-if="this.$store.state.admin">写攻略</router-link>
+            <router-link to="/MyArticle" tag="span" v-if="this.$store.state.admin">我的攻略</router-link>
+            <span @click="logout">退出登录</span>
           </div>
         </li>
       </ul>

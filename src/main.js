@@ -5,7 +5,7 @@ import router from './router/index'
 import store from './store/index'
 import resetStyle from './assets/css/reset.css'
 import iconStyle from './assets/font/iconfont.css'
-import { Message, Upload, FormItem } from 'element-ui'
+import { Message, Upload, FormItem, Drawer, Image } from 'element-ui'
 // markdown相关
 import VMdEditor from '@kangc/v-md-editor'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
@@ -28,6 +28,8 @@ Vue.use(resetStyle)
 Vue.use(iconStyle)
 Vue.use(Upload)
 Vue.use(FormItem)
+Vue.use(Drawer)
+Vue.use(Image)
 Vue.prototype.$message = Message
 Vue.component(Message.name, Message)
 

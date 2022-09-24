@@ -45,22 +45,11 @@ export default {
 
 <style scoped lang="scss">
   #banner{
-  width: 100%;
   height: 80vh;
   background: url('./../assets/images/about.jpg') no-repeat;
   background-size: cover;
   position: relative;
   .title{
-    width: 0px;
-    font-size: 32px;
-    color: rgba(255,255,255,1);
-    position: absolute;
-    text-align: center;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
-    overflow: hidden;
     animation: showText 4s steps(8) 0s forwards;
   }
   @keyframes showText {

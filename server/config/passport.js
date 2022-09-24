@@ -4,6 +4,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const mongoose = require('mongoose')
 // eslint-disable-next-line no-unused-vars
 const User = mongoose.model('users')
+const Admin = mongoose.model('admin')
 // eslint-disable-next-line no-unused-vars
 const keys = require('./keys')
 
@@ -15,13 +16,25 @@ module.exports = passport => {
   // eslint-disable-next-line camelcase
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     console.log(jwt_payload)
-    User.findById(jwt_payload.id).then((user) => {
-      if (user) {
-        return done(null, user)
-      }
-      return done(null, false)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }))
+    if (jwt_payload.adminLevel) {
+      Admin.findById(jwt_payload.id).then((admin) => {
+        if (admin) {
+          return done(null, admin)
+        }
+        return done(null, false)
+      }).catch((err) => {
+        console.log(err)
+      })
+    } else {
+      User.findById(jwt_payload.id).then((user) => {
+        if (user) {
+          return done(null, user)
+        }
+        return done(null, false)
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  })
+  )
 }

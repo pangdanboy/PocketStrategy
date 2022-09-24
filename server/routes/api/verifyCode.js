@@ -105,4 +105,9 @@ router.get('/verify', (req, res) => {
   }
   return res.json({ code: 404, verifyCode: '邮箱不存在' })
 })
+
+/**
+ * 邮箱验证码发送
+ * @type {Router}
+ */
 module.exports = router

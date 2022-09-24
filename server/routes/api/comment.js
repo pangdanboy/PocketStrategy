@@ -55,4 +55,8 @@ router.get('/getComment', (req, res) => {
   })
 })
 
+/**
+ * 文章评论api
+ * @type {Router}
+ */
 module.exports = router

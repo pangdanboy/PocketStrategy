@@ -4,11 +4,11 @@ const Schema = mongoose.Schema
 
 // create schema
 const ArticleSchema = new Schema({
-  // 文章id
-  articleID: {
-    type: String,
-    required: true
-  },
+  // // 文章id
+  // articleID: {
+  //   type: String,
+  //   required: true
+  // },
   // 文章作者id
   user_id: {
     type: String,

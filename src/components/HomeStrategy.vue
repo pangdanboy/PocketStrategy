@@ -1,5 +1,6 @@
 <template>
   <div class="home-atlas">
+    <!--文章下标为奇数-->
     <div class="oddLeft" v-show="(index+1) % 2 !== 0">
       <img :src="item.cover" alt="">
     </div>
@@ -21,9 +22,12 @@
         <span v-show="(index+1) % 2 !== 0">{{ item.date | formatDate }}</span>
       </div>
     </div>
+    <!--文章下标为偶数-->
     <div class="evenLeft" v-show="(index+1) % 2 === 0">
       <img :src="item.cover" alt="">
     </div>
+    <!--具名插槽，父组件在使用子组件可以在此添加特有内容(这里的目的是在我的攻略界面中添加删除攻略按钮)-->
+    <slot name="operation"></slot>
   </div>
 </template>
 
@@ -63,6 +67,7 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
     &:hover{
       .oddLeft{
         img{

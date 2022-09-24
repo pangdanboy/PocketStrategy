@@ -7,7 +7,19 @@ const passport = require('passport')
 const app = express()
 
 // 解决跨域问题
-app.use(cors({ origin: 'http://localhost:8080' }))
+// 请求地址白名单
+const whiteList = ['http://localhost:8080', 'http://localhost:8081']
+// 判断当前origin是否包含在白名单中
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whiteList.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('not allow by cors'))
+    }
+  }
+}
+app.use(cors(corsOptions))
 
 // 引入users.js
 const users = require('./routes/api/user')
@@ -21,6 +33,8 @@ const article = require('./routes/api/article')
 const comment = require('./routes/api/comment')
 // 引入message.js
 const message = require('./routes/api/message')
+// 引入admin.js
+const admin = require('./routes/api/admin')
 
 // DB config
 const db = require('./config/keys').mongoURI
@@ -42,6 +56,7 @@ app.use(bodyParser.json())
 // 配置静态托管，将用户上传的静态资源暴露出去
 app.use('/public/articleCover', express.static('./public/articleCover'))
 app.use('/public/userAvatar', express.static('./public/userAvatar'))
+app.use('/public/wallpaper', express.static('./public/wallpaper'))
 
 // 请求测试
 app.get('/', (req, res) => {
@@ -54,6 +69,7 @@ app.use('/api/uploadImg', uploadImg)
 app.use('/api/articles', article)
 app.use('/api/comments', comment)
 app.use('/api/messages', message)
+app.use('/api/admin', admin)
 
 // 端口配置
 const port = process.env.PORT || 5000

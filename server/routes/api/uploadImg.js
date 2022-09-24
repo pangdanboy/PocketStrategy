@@ -36,4 +36,8 @@ router.post('/imgUpload', upload.array('img', 1), (req, res) => {
   })
 })
 
+/**
+ * 图片上传
+ * @type {Router}
+ */
 module.exports = router

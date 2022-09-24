@@ -7,12 +7,12 @@ const Article = require('./../../models/articles')
 const User = require('./../../models/users')
 
 // $router  POST  api/articles/article
-// @desc    返回新添加的文章数据
+// @desc    保存并返回新添加的文章数据
 // @access  private
 router.post('/article', passport.authenticate('jwt', { session: false }), (req, res) => {
   // 创建新的文章，这里如果想要扩展每个用户都可以发布文章的话，可以将req.user的信息保存在文章列表中
   const newArticle = new Article({
-    articleID: Date.now(),
+    // articleID: Date.now(),
     user_id: req.user.id,
     // author: req.user.name,
     title: req.body.title,
@@ -73,8 +73,37 @@ router.get('/getCount', (req, res) => {
 router.get('/getOne', (req, res) => {
   const articleID = req.query.articleID
   // 获取指定文章信息数据
-  Article.findOne({ articleID: articleID }).then(article => {
+  Article.findOne({ _id: articleID }).then(article => {
     res.json(article)
+  }).catch(err => {
+    console.log(err)
+  })
+})
+
+// $router  GET  api/articles/getUserArticle
+// @desc    返回指定用户的文章信息
+// @access  public
+router.get('/getUserArticle', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const userID = req.query.user_id
+  // 获取指定文章信息数据
+  Article.find({ user_id: userID }).sort({ $natural: -1 }).then(article => {
+    res.json(article)
+  }).catch(err => {
+    console.log(err)
+  })
+})
+
+// $router  PUT  api/articles/delArticle
+// @desc    删除指定文章数据
+// @access  public
+router.delete('/delArticle', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const articleID = req.query.articleID
+  Article.remove({ articleID: articleID }, { justOne: true }).then(delRes => {
+    res.json({
+      code: 200,
+      delCount: 1,
+      del: true
+    })
   }).catch(err => {
     console.log(err)
   })
@@ -94,4 +123,8 @@ router.put('/support', (req, res) => {
     console.log(err)
   })
 })
+/**
+ * 文章管理
+ * @type {Router}
+ */
 module.exports = router
